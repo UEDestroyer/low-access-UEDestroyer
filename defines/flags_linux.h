@@ -82,6 +82,7 @@
 #define SIGUNUSED           SIGSYS   // alias (historical)
 #define SIGRTMIN            32       // first real-time signal (real-time signals: 32..64)
 #define SIGRTMAX            64       // last real-time signal
+#define NSIG (SIGRTMAX + 1)
 
 // ─── signal action flags (sa_flags in struct sigaction) ──────
 #define SA_NOCLDSTOP        0x00000001 // do not send SIGCHLD when child stops (only on termination)

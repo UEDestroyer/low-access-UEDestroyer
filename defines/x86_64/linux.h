@@ -7,7 +7,7 @@
 //  return:             rax (negative = -errno)
 //  source:             linux/arch/x86/entry/syscalls/syscall_64.tbl
 // ============================================================
-
+#define LINUX_SIGSET_SIZE 8
 // ─── file i/o ────────────────────────────────────────────────
 #define SYS_read                0    // read(fd, buf, count)               — read bytes from fd into buf
 #define SYS_write               1    // write(fd, buf, count)              — write bytes from buf to fd

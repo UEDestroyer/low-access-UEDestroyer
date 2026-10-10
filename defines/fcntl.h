@@ -209,6 +209,7 @@
 #define PROT_GROWSUP            0x02000000 // apply to growing-up mapping
 
 // ─── mmap flags (flags arg to mmap) ──────────────────────────
+#define MAP_FAILED              (void *)-1
 #define MAP_SHARED              0x01   // share changes with other mappings of the same file
 #define MAP_PRIVATE             0x02   // copy-on-write — changes not written back to file
 #define MAP_SHARED_VALIDATE     0x03   // like MAP_SHARED but validates all flags  since 4.15
