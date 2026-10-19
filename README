@@ -18,5 +18,4 @@ raw_syscall*, and plain scalar typedefs (ssize_t, off_t, pid_t, ...).
 Including a libc header that defines the same macro with the same value only
 gives a "redefined" warning.
 
-On x86 and arm you must provide raw_syscall() yourself (arm64 and x86_64
-get it from defines/<arch>/linux.h).
+
