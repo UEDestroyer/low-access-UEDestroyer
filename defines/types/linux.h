@@ -52,23 +52,23 @@ typedef linux_s64 __kernel_loff_t;
 /* Kernel fsid_t is two 32-bit integers in the syscall ABI. */
 typedef struct {
     __s32 val[2];
-} __kernel_fsid_t;
+} ue_kernel_fsid_t;
 
 typedef linux_long linux_time_t;
 
 /* ---------- vectors / polling ---------- */
-struct iovec {
+struct ue_iovec {
     linux_ptr iov_base;
     linux_ulong iov_len;
 };
 
-struct pollfd {
+struct ue_pollfd {
     int fd;
     short events;
     short revents;
 };
 
-struct epoll_event {
+struct ue_epoll_event {
     linux_u32 events;
     union {
         linux_u64 data;
@@ -80,50 +80,50 @@ struct epoll_event {
 };
 
 /* ---------- time ---------- */
-struct timespec {
+struct ue_timespec {
     linux_long tv_sec;
     linux_long tv_nsec;
 };
 
-struct __kernel_timespec {
+struct ue_kernel_timespec {
     linux_s64 tv_sec;
     linux_s64 tv_nsec;
 };
 
-struct timeval {
+struct ue_timeval {
     linux_long tv_sec;
     linux_long tv_usec;
 };
 
-struct timezone {
+struct ue_timezone {
     int tz_minuteswest;
     int tz_dsttime;
 };
 
-struct itimerspec {
-    struct timespec it_interval;
-    struct timespec it_value;
+struct ue_itimerspec {
+    struct ue_timespec it_interval;
+    struct ue_timespec it_value;
 };
 
-struct itimerval {
-    struct timeval it_interval;
-    struct timeval it_value;
+struct ue_itimerval {
+    struct ue_timeval it_interval;
+    struct ue_timeval it_value;
 };
 
-struct tms {
+struct ue_tms {
     linux_long tms_utime;
     linux_long tms_stime;
     linux_long tms_cutime;
     linux_long tms_cstime;
 };
 
-struct utimbuf {
+struct ue_utimbuf {
     linux_time_t actime;
     linux_time_t modtime;
 };
 
 /* linux/timex.h ABI. */
-struct timex {
+struct ue_timex {
     unsigned int modes;
     linux_long offset;
     linux_long freq;
@@ -133,7 +133,7 @@ struct timex {
     linux_long constant;
     linux_long precision;
     linux_long tolerance;
-    struct timeval time;
+    struct ue_timeval time;
     linux_long tick;
     linux_long ppsfreq;
     linux_long jitter;
@@ -148,16 +148,16 @@ struct timex {
 };
 
 /* ---------- scheduling / resource limits ---------- */
-struct sched_param {
-    int sched_priority;
+struct ue_sched_param {
+    int ue_sched_priority;
 };
 
-struct sched_attr {
+struct ue_sched_attr {
     linux_u32 size;
     linux_u32 sched_policy;
     linux_u64 sched_flags;
     linux_s32 sched_nice;
-    linux_u32 sched_priority;
+    linux_u32 ue_sched_priority;
     linux_u64 sched_runtime;
     linux_u64 sched_deadline;
     linux_u64 sched_period;
@@ -165,19 +165,19 @@ struct sched_attr {
     linux_u32 sched_util_max;
 };
 
-struct rlimit {
+struct ue_rlimit {
     linux_ulong rlim_cur;
     linux_ulong rlim_max;
 };
 
-struct rlimit64 {
+struct ue_rlimit64 {
     linux_u64 rlim_cur;
     linux_u64 rlim_max;
 };
 
-struct rusage {
-    struct timeval ru_utime;
-    struct timeval ru_stime;
+struct ue_rusage {
+    struct ue_timeval ru_utime;
+    struct ue_timeval ru_stime;
     linux_long ru_maxrss;
     linux_long ru_ixrss;
     linux_long ru_idrss;
@@ -195,7 +195,7 @@ struct rusage {
 };
 
 /* ---------- process / clone ---------- */
-struct clone_args {
+struct ue_clone_args {
     linux_u64 flags;
     linux_u64 pidfd;
     linux_u64 child_tid;
@@ -209,24 +209,24 @@ struct clone_args {
     linux_u64 cgroup;
 };
 
-struct robust_list {
+struct ue_robust_list {
     linux_ptr next;
 };
 
-struct robust_list_head {
-    struct robust_list list;
+struct ue_robust_list_head {
+    struct ue_robust_list list;
     linux_long futex_offset;
     linux_ptr list_op_pending;
 };
 
-struct futex_waitv {
+struct ue_futex_waitv {
     linux_u64 val;
     linux_u64 uaddr;
     linux_u32 flags;
     linux_u32 __reserved;
 };
 
-struct rseq {
+struct ue_rseq {
     linux_u32 cpu_id_start;
     linux_u32 cpu_id;
     linux_u64 rseq_cs;
@@ -241,22 +241,22 @@ typedef struct {
 } linux_sigset_t;
 
 #if defined(__i386__) || defined(__arm__)
-struct sigaction {
-    linux_ptr sa_handler;
+struct ue_sigaction {
+    linux_ptr ue_sa_handler;
     linux_u32 sa_flags;
     linux_ptr sa_restorer;
     linux_u32 sa_mask[2];
 };
 #else
-struct sigaction {
-    linux_ptr sa_handler;
+struct ue_sigaction {
+    linux_ptr ue_sa_handler;
     linux_ulong sa_flags;
     linux_ptr sa_restorer;
     linux_ulong sa_mask[2];
 };
 #endif
 
-struct sigevent {
+struct ue_sigevent {
     linux_u64 sigev_value;
     linux_s32 sigev_signo;
     linux_s32 sigev_notify;
@@ -269,12 +269,12 @@ struct sigevent {
 };
 
 /* ---------- sockets ---------- */
-struct sockaddr {
+struct ue_sockaddr {
     unsigned short sa_family;
     char sa_data[14];
 };
 
-struct msghdr {
+struct ue_msghdr {
     linux_ptr msg_name;
     linux_u32 msg_namelen;
     linux_ptr msg_iov;
@@ -284,8 +284,8 @@ struct msghdr {
     unsigned int msg_flags;
 };
 
-struct mmsghdr {
-    struct msghdr msg_hdr;
+struct ue_mmsghdr {
+    struct ue_msghdr msg_hdr;
     unsigned int msg_len;
 };
 
@@ -305,7 +305,7 @@ struct linux_dirent64 {
     char d_name[1];
 };
 
-struct file_handle {
+struct ue_file_handle {
     unsigned int handle_bytes;
     int handle_type;
     unsigned char f_handle[0];
@@ -314,7 +314,7 @@ struct file_handle {
 /* stat is ABI-specific; definitions below cover the architectures supported
  * by this project. */
 #if defined(__aarch64__) || defined(__x86_64__)
-struct stat {
+struct ue_stat {
     linux_ulong st_dev;
     linux_ulong st_ino;
     linux_ulong st_nlink;
@@ -326,16 +326,16 @@ struct stat {
     linux_long st_size;
     linux_long st_blksize;
     linux_long st_blocks;
-    linux_ulong st_atime;
+    linux_ulong ue_st_atime;
     linux_ulong st_atime_nsec;
-    linux_ulong st_mtime;
+    linux_ulong ue_st_mtime;
     linux_ulong st_mtime_nsec;
-    linux_ulong st_ctime;
+    linux_ulong ue_st_ctime;
     linux_ulong st_ctime_nsec;
     linux_long __unused[3];
 };
 #elif defined(__arm__)
-struct stat {
+struct ue_stat {
     linux_ulong st_dev;
     linux_ulong st_ino;
     unsigned short st_mode;
@@ -346,17 +346,17 @@ struct stat {
     linux_ulong st_size;
     linux_ulong st_blksize;
     linux_ulong st_blocks;
-    linux_ulong st_atime;
+    linux_ulong ue_st_atime;
     linux_ulong st_atime_nsec;
-    linux_ulong st_mtime;
+    linux_ulong ue_st_mtime;
     linux_ulong st_mtime_nsec;
-    linux_ulong st_ctime;
+    linux_ulong ue_st_ctime;
     linux_ulong st_ctime_nsec;
     linux_ulong __unused4;
     linux_ulong __unused5;
 };
 #else
-struct stat {
+struct ue_stat {
     linux_ulong st_dev;
     linux_ulong st_ino;
     unsigned int st_mode;
@@ -369,11 +369,11 @@ struct stat {
     int st_blksize;
     int __pad2;
     linux_long st_blocks;
-    linux_long st_atime;
+    linux_long ue_st_atime;
     linux_ulong st_atime_nsec;
-    linux_long st_mtime;
+    linux_long ue_st_mtime;
     linux_ulong st_mtime_nsec;
-    linux_long st_ctime;
+    linux_long ue_st_ctime;
     linux_ulong st_ctime_nsec;
     unsigned int __unused4;
     unsigned int __unused5;
@@ -381,7 +381,7 @@ struct stat {
 #endif
 
 #if defined(__arm__)
-struct stat64 {
+struct ue_stat64 {
     linux_u64 st_dev;
     unsigned char __pad0[4];
     linux_ulong __st_ino;
@@ -394,16 +394,16 @@ struct stat64 {
     linux_s64 st_size;
     linux_ulong st_blksize;
     linux_u64 st_blocks;
-    linux_ulong st_atime;
+    linux_ulong ue_st_atime;
     linux_ulong st_atime_nsec;
-    linux_ulong st_mtime;
+    linux_ulong ue_st_mtime;
     linux_ulong st_mtime_nsec;
-    linux_ulong st_ctime;
+    linux_ulong ue_st_ctime;
     linux_ulong st_ctime_nsec;
     linux_u64 st_ino;
 };
 #elif defined(__i386__)
-struct stat64 {
+struct ue_stat64 {
     linux_u64 st_dev;
     unsigned char __pad0[4];
     linux_ulong __st_ino;
@@ -416,16 +416,16 @@ struct stat64 {
     linux_s64 st_size;
     linux_ulong st_blksize;
     linux_u64 st_blocks;
-    linux_ulong st_atime;
+    linux_ulong ue_st_atime;
     linux_ulong st_atime_nsec;
-    linux_ulong st_mtime;
+    linux_ulong ue_st_mtime;
     linux_ulong st_mtime_nsec;
-    linux_ulong st_ctime;
+    linux_ulong ue_st_ctime;
     linux_ulong st_ctime_nsec;
     linux_u64 st_ino;
 };
 #else
-struct stat64 {
+struct ue_stat64 {
     linux_u64 st_dev;
     linux_u64 st_ino;
     linux_u32 st_mode;
@@ -438,11 +438,11 @@ struct stat64 {
     linux_s32 st_blksize;
     linux_s32 __pad2;
     linux_s64 st_blocks;
-    linux_s32 st_atime;
+    linux_s32 ue_st_atime;
     linux_u32 st_atime_nsec;
-    linux_s32 st_mtime;
+    linux_s32 ue_st_mtime;
     linux_u32 st_mtime_nsec;
-    linux_s32 st_ctime;
+    linux_s32 ue_st_ctime;
     linux_u32 st_ctime_nsec;
     linux_u32 __unused4;
     linux_u32 __unused5;
@@ -456,7 +456,7 @@ typedef linux_long linux_statfs_word;
 typedef linux_u32 linux_statfs_word;
 #endif
 
-struct statfs {
+struct ue_statfs {
     linux_statfs_word f_type;
     linux_statfs_word f_bsize;
     linux_statfs_word f_blocks;
@@ -464,14 +464,14 @@ struct statfs {
     linux_statfs_word f_bavail;
     linux_statfs_word f_files;
     linux_statfs_word f_ffree;
-    __kernel_fsid_t f_fsid;
+    ue_kernel_fsid_t f_fsid;
     linux_statfs_word f_namelen;
     linux_statfs_word f_frsize;
     linux_statfs_word f_flags;
     linux_statfs_word f_spare[4];
 };
 
-struct statfs64 {
+struct ue_statfs64 {
     linux_statfs_word f_type;
     linux_statfs_word f_bsize;
     linux_u64 f_blocks;
@@ -479,20 +479,20 @@ struct statfs64 {
     linux_u64 f_bavail;
     linux_u64 f_files;
     linux_u64 f_ffree;
-    __kernel_fsid_t f_fsid;
+    ue_kernel_fsid_t f_fsid;
     linux_statfs_word f_namelen;
     linux_statfs_word f_frsize;
     linux_statfs_word f_flags;
     linux_statfs_word f_spare[4];
 };
 
-struct statx_timestamp {
+struct ue_statx_timestamp {
     linux_s64 tv_sec;
     linux_u32 tv_nsec;
     linux_s32 __reserved;
 };
 
-struct statx {
+struct ue_statx {
     linux_u32 stx_mask;
     linux_u32 stx_blksize;
     linux_u64 stx_attributes;
@@ -505,10 +505,10 @@ struct statx {
     linux_u64 stx_size;
     linux_u64 stx_blocks;
     linux_u64 stx_attributes_mask;
-    struct statx_timestamp stx_atime;
-    struct statx_timestamp stx_btime;
-    struct statx_timestamp stx_ctime;
-    struct statx_timestamp stx_mtime;
+    struct ue_statx_timestamp stx_atime;
+    struct ue_statx_timestamp stx_btime;
+    struct ue_statx_timestamp stx_ctime;
+    struct ue_statx_timestamp stx_mtime;
     linux_u32 stx_rdev_major;
     linux_u32 stx_rdev_minor;
     linux_u32 stx_dev_major;
@@ -525,13 +525,13 @@ struct statx {
 };
 
 /* ---------- mount/open ABI ---------- */
-struct open_how {
+struct ue_open_how {
     linux_u64 flags;
     linux_u64 mode;
     linux_u64 resolve;
 };
 
-struct mount_attr {
+struct ue_mount_attr {
     linux_u64 attr_set;
     linux_u64 attr_clr;
     linux_u64 propagation;
@@ -540,7 +540,7 @@ struct mount_attr {
 
 /* Linux 6.x statmount ABI.  Reserved space is retained exactly so the
  * structure can be passed back to the kernel without libc headers. */
-struct statmount {
+struct ue_statmount {
     linux_u32 size;
     linux_u32 __spare1;
     linux_u64 mask;
@@ -557,13 +557,13 @@ struct statmount {
 };
 
 /* ---------- System V IPC ---------- */
-struct sembuf {
+struct ue_sembuf {
     unsigned short sem_num;
     short sem_op;
     short sem_flg;
 };
 
-struct ipc_perm {
+struct ue_ipc_perm {
     linux_long __key;
     linux_u32 uid;
     linux_u32 gid;
@@ -577,8 +577,8 @@ struct ipc_perm {
     linux_ulong __unused2;
 };
 
-struct msqid_ds {
-    struct ipc_perm msg_perm;
+struct ue_msqid_ds {
+    struct ue_ipc_perm msg_perm;
     linux_ulong msg_stime;
     linux_ulong msg_rtime;
     linux_ulong msg_ctime;
@@ -591,8 +591,8 @@ struct msqid_ds {
     linux_ulong __unused5;
 };
 
-struct shmid_ds {
-    struct ipc_perm shm_perm;
+struct ue_shmid_ds {
+    struct ue_ipc_perm shm_perm;
     linux_ulong shm_atime;
     linux_ulong shm_dtime;
     linux_ulong shm_ctime;
@@ -604,7 +604,7 @@ struct shmid_ds {
     linux_ulong __unused5;
 };
 
-struct mq_attr {
+struct ue_mq_attr {
     linux_long mq_flags;
     linux_long mq_maxmsg;
     linux_long mq_msgsize;
@@ -613,7 +613,7 @@ struct mq_attr {
 };
 
 /* ---------- POSIX AIO ---------- */
-struct iocb {
+struct ue_iocb {
     linux_u64 aio_data;
     linux_u32 aio_key;
     linux_u32 aio_rw_flags;
@@ -628,7 +628,7 @@ struct iocb {
     linux_u32 aio_resfd;
 };
 
-struct io_event {
+struct ue_io_event {
     linux_u64 data;
     linux_u64 obj;
     linux_s64 res;
@@ -636,7 +636,7 @@ struct io_event {
 };
 
 /* ---------- io_uring ---------- */
-struct io_uring_params {
+struct ue_io_uring_params {
     linux_u32 sq_entries;
     linux_u32 cq_entries;
     linux_u32 flags;
@@ -670,7 +670,7 @@ struct io_uring_params {
 };
 
 /* ---------- performance ---------- */
-struct perf_event_attr {
+struct ue_perf_event_attr {
     linux_u32 type;
     linux_u32 size;
     linux_u64 config;
@@ -698,7 +698,7 @@ struct perf_event_attr {
 };
 
 /* ---------- system information ---------- */
-struct sysinfo {
+struct ue_sysinfo {
     linux_long uptime;
     linux_ulong loads[3];
     linux_ulong totalram;
@@ -715,7 +715,7 @@ struct sysinfo {
     char _f[20 - 2 * sizeof(linux_ulong) - sizeof(unsigned int)];
 };
 
-struct utsname {
+struct ue_utsname {
     char sysname[65];
     char nodename[65];
     char release[65];
@@ -725,12 +725,12 @@ struct utsname {
 };
 
 /* ---------- cachestat ---------- */
-struct cachestat_range {
+struct ue_cachestat_range {
     linux_u64 off;
     linux_u64 len;
 };
 
-struct cachestat {
+struct ue_cachestat {
     linux_u64 nr_cache;
     linux_u64 nr_dirty;
     linux_u64 nr_writeback;
@@ -739,7 +739,7 @@ struct cachestat {
 };
 
 /* ---------- rseq ---------- */
-struct rseq_cs {
+struct ue_rseq_cs {
     linux_u64 version;
     linux_u64 flags;
     linux_u64 start_ip;
@@ -748,14 +748,14 @@ struct rseq_cs {
 };
 
 /* ---------- misc kernel ABI ---------- */
-struct getcpu_cache {
+struct ue_getcpu_cache {
     linux_u64 blob[2];
 };
 
 /* Linux does not expose a stable UAPI layout for this project-specific
  * namespace listing extension. Keep an explicit fixed record rather than
  * importing a libc/kernel declaration. */
-struct namespace_entry {
+struct ue_namespace_entry {
     linux_u64 id;
     linux_u64 flags;
     linux_u64 type;

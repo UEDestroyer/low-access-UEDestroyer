@@ -1,1 +1,22 @@
 created with AI
+
+Naming (no clashes with POSIX / libc)
+-------------------------------------
+Everything that behaves differently from its POSIX namesake carries the ue_ prefix.
+
+  functions       ue_read(), ue_open(), ue_write() ...
+                  raw syscall wrappers: they return -errno and never set errno
+  struct tags     struct ue_stat, struct ue_timespec ... (raw kernel layouts)
+  typedefs        ue_sigset_t, ue_fd_set, ue_cpu_set_t, ue_siginfo_t,
+                  ue_stack_t, ue_timer_t, ue_idtype_t, ue_kernel_fsid_t
+  struct fields   ue_sa_handler, ue_sched_priority,
+                  ue_st_atime, ue_st_mtime, ue_st_ctime
+                  (glibc defines these names as macros)
+
+Left as is, because they match POSIX: macros and constants (O_RDONLY, SYS_*, ...),
+raw_syscall*, and plain scalar typedefs (ssize_t, off_t, pid_t, ...).
+Including a libc header that defines the same macro with the same value only
+gives a "redefined" warning.
+
+On x86 and arm you must provide raw_syscall() yourself (arm64 and x86_64
+get it from defines/<arch>/linux.h).
