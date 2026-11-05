@@ -47,7 +47,7 @@ LINUX_SYSCALL_API int ue_openat(int dirfd, const char *pathname, int flags, mode
 #endif
 
 #ifdef SYS_openat2
-LINUX_SYSCALL_API int ue_openat2(int dirfd, const char *pathname, struct ue_open_how *how, size_t size)
+LINUX_SYSCALL_API int ue_openat2(int dirfd, const char *pathname, struct open_how *how, size_t size)
 {
     return (int)raw_syscall(SYS_openat2, dirfd, pathname, how, size);
 }
@@ -110,42 +110,42 @@ LINUX_SYSCALL_API ssize_t ue_pwrite64(int fd, const void *buf, size_t count, off
 #endif
 
 #ifdef SYS_readv
-LINUX_SYSCALL_API ssize_t ue_readv(int fd, const struct ue_iovec *iov, int iovcnt)
+LINUX_SYSCALL_API ssize_t ue_readv(int fd, const struct iovec *iov, int iovcnt)
 {
     return (ssize_t)raw_syscall(SYS_readv, fd, iov, iovcnt);
 }
 #endif
 
 #ifdef SYS_writev
-LINUX_SYSCALL_API ssize_t ue_writev(int fd, const struct ue_iovec *iov, int iovcnt)
+LINUX_SYSCALL_API ssize_t ue_writev(int fd, const struct iovec *iov, int iovcnt)
 {
     return (ssize_t)raw_syscall(SYS_writev, fd, iov, iovcnt);
 }
 #endif
 
 #ifdef SYS_preadv
-LINUX_SYSCALL_API ssize_t ue_preadv(int fd, const struct ue_iovec *iov, int iovcnt, off_t offset)
+LINUX_SYSCALL_API ssize_t ue_preadv(int fd, const struct iovec *iov, int iovcnt, off_t offset)
 {
     return (ssize_t)raw_syscall(SYS_preadv, fd, iov, iovcnt, offset);
 }
 #endif
 
 #ifdef SYS_pwritev
-LINUX_SYSCALL_API ssize_t ue_pwritev(int fd, const struct ue_iovec *iov, int iovcnt, off_t offset)
+LINUX_SYSCALL_API ssize_t ue_pwritev(int fd, const struct iovec *iov, int iovcnt, off_t offset)
 {
     return (ssize_t)raw_syscall(SYS_pwritev, fd, iov, iovcnt, offset);
 }
 #endif
 
 #ifdef SYS_preadv2
-LINUX_SYSCALL_API ssize_t ue_preadv2(int fd, const struct ue_iovec *iov, int iovcnt, off_t offset, int flags)
+LINUX_SYSCALL_API ssize_t ue_preadv2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags)
 {
     return (ssize_t)raw_syscall(SYS_preadv2, fd, iov, iovcnt, offset, flags);
 }
 #endif
 
 #ifdef SYS_pwritev2
-LINUX_SYSCALL_API ssize_t ue_pwritev2(int fd, const struct ue_iovec *iov, int iovcnt, off_t offset, int flags)
+LINUX_SYSCALL_API ssize_t ue_pwritev2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags)
 {
     return (ssize_t)raw_syscall(SYS_pwritev2, fd, iov, iovcnt, offset, flags);
 }
@@ -277,21 +277,15 @@ LINUX_SYSCALL_API ssize_t ue_tee(int fd_in, int fd_out, size_t len, unsigned int
 #endif
 
 #ifdef SYS_vmsplice
-LINUX_SYSCALL_API ssize_t ue_vmsplice(int fd, const struct ue_iovec *iov, size_t nr_segs, unsigned int flags)
+LINUX_SYSCALL_API ssize_t ue_vmsplice(int fd, const struct iovec *iov, size_t nr_segs, unsigned int flags)
 {
     return (ssize_t)raw_syscall(SYS_vmsplice, fd, iov, nr_segs, flags);
 }
 #endif
 
 #ifdef SYS_fcntl
-LINUX_SYSCALL_API int ue_fcntl(int fd, int cmd, ...)
+LINUX_SYSCALL_API int ue_fcntl(int fd, int cmd, unsigned long arg)
 {
-    /* fcntl() has an optional third syscall argument. */
-    __builtin_va_list ap;
-    unsigned long arg = 0;
-    __builtin_va_start(ap, cmd);
-    arg = __builtin_va_arg(ap, unsigned long);
-    __builtin_va_end(ap);
     return (int)raw_syscall(SYS_fcntl, fd, cmd, arg);
 }
 #endif
@@ -304,70 +298,70 @@ LINUX_SYSCALL_API int ue_ioctl_raw(unsigned long fd, unsigned long request, unsi
 #endif
 
 #ifdef SYS_stat
-LINUX_SYSCALL_API int ue_stat(const char *pathname, struct ue_stat *statbuf)
+LINUX_SYSCALL_API int ue_stat(const char *pathname, struct stat *statbuf)
 {
     return (int)raw_syscall(SYS_stat, pathname, statbuf);
 }
 #endif
 
 #ifdef SYS_fstat
-LINUX_SYSCALL_API int ue_fstat(int fd, struct ue_stat *statbuf)
+LINUX_SYSCALL_API int ue_fstat(int fd, struct stat *statbuf)
 {
     return (int)raw_syscall(SYS_fstat, fd, statbuf);
 }
 #endif
 
 #ifdef SYS_lstat
-LINUX_SYSCALL_API int ue_lstat(const char *pathname, struct ue_stat *statbuf)
+LINUX_SYSCALL_API int ue_lstat(const char *pathname, struct stat *statbuf)
 {
     return (int)raw_syscall(SYS_lstat, pathname, statbuf);
 }
 #endif
 
 #ifdef SYS_newfstatat
-LINUX_SYSCALL_API int ue_fstatat(int dirfd, const char *pathname, struct ue_stat *statbuf, int flags)
+LINUX_SYSCALL_API int ue_fstatat(int dirfd, const char *pathname, struct stat *statbuf, int flags)
 {
     return (int)raw_syscall(SYS_newfstatat, dirfd, pathname, statbuf, flags);
 }
 #endif
 
 #ifdef SYS_fstatat64
-LINUX_SYSCALL_API int ue_fstatat64(int dirfd, const char *pathname, struct ue_stat64 *statbuf, int flags)
+LINUX_SYSCALL_API int ue_fstatat64(int dirfd, const char *pathname, struct stat64 *statbuf, int flags)
 {
     return (int)raw_syscall(SYS_fstatat64, dirfd, pathname, statbuf, flags);
 }
 #endif
 
 #ifdef SYS_statx
-LINUX_SYSCALL_API int ue_statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct ue_statx *statxbuf)
+LINUX_SYSCALL_API int ue_statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf)
 {
     return (int)raw_syscall(SYS_statx, dirfd, pathname, flags, mask, statxbuf);
 }
 #endif
 
 #ifdef SYS_statfs
-LINUX_SYSCALL_API int ue_statfs(const char *path, struct ue_statfs *buf)
+LINUX_SYSCALL_API int ue_statfs(const char *path, struct statfs *buf)
 {
     return (int)raw_syscall(SYS_statfs, path, buf);
 }
 #endif
 
 #ifdef SYS_fstatfs
-LINUX_SYSCALL_API int ue_fstatfs(int fd, struct ue_statfs *buf)
+LINUX_SYSCALL_API int ue_fstatfs(int fd, struct statfs *buf)
 {
     return (int)raw_syscall(SYS_fstatfs, fd, buf);
 }
 #endif
 
 #ifdef SYS_statfs64
-LINUX_SYSCALL_API int ue_statfs64(const char *path, size_t sz, struct ue_statfs64 *buf)
+LINUX_SYSCALL_API int ue_statfs64(const char *path, size_t sz, struct statfs64 *buf)
 {
     return (int)raw_syscall(SYS_statfs64, path, sz, buf);
 }
 #endif
 
 #ifdef SYS_fstatfs64
-LINUX_SYSCALL_API int ue_fstatfs64(int fd, size_t sz, struct ue_statfs64 *buf)
+LINUX_SYSCALL_API int ue_fstatfs64(int fd, size_t sz, struct statfs64 *buf)
 {
     return (int)raw_syscall(SYS_fstatfs64, fd, sz, buf);
 }
@@ -844,14 +838,14 @@ LINUX_SYSCALL_API int ue_fspick(int dfd, const char *path, unsigned int flags)
 #endif
 
 #ifdef SYS_mount_setattr
-LINUX_SYSCALL_API int ue_mount_setattr(int dfd, const char *path, unsigned int flags, struct ue_mount_attr *uattr, size_t usize)
+LINUX_SYSCALL_API int ue_mount_setattr(int dfd, const char *path, unsigned int flags, struct mount_attr *uattr, size_t usize)
 {
     return (int)raw_syscall(SYS_mount_setattr, dfd, path, flags, uattr, usize);
 }
 #endif
 
 #ifdef SYS_statmount
-LINUX_SYSCALL_API int ue_statmount(int dfd, const char *pathname, struct ue_statmount *buf, size_t size, unsigned int flags)
+LINUX_SYSCALL_API int ue_statmount(int dfd, const char *pathname, struct statmount *buf, size_t size, unsigned int flags)
 {
     return (int)raw_syscall(SYS_statmount, dfd, pathname, buf, size, flags);
 }
@@ -865,7 +859,7 @@ LINUX_SYSCALL_API ssize_t ue_listmount(uint64_t *mnt_id, uint64_t *list, size_t 
 #endif
 
 #ifdef SYS_open_tree_attr
-LINUX_SYSCALL_API int ue_open_tree_attr(int dfd, const char *path, unsigned int flags, struct ue_open_how *how, size_t size)
+LINUX_SYSCALL_API int ue_open_tree_attr(int dfd, const char *path, unsigned int flags, struct open_how *how, size_t size)
 {
     return (int)raw_syscall(SYS_open_tree_attr, dfd, path, flags, how, size);
 }
@@ -1042,7 +1036,7 @@ LINUX_SYSCALL_API int ue_clone(unsigned long flags, void *child_stack, void *pti
 #endif
 
 #ifdef SYS_clone3
-LINUX_SYSCALL_API int ue_clone3(struct ue_clone_args *cl_args, size_t size)
+LINUX_SYSCALL_API int ue_clone3(struct clone_args *cl_args, size_t size)
 {
     return (int)raw_syscall(SYS_clone3, cl_args, size);
 }
@@ -1079,14 +1073,14 @@ LINUX_SYSCALL_API void ue_exit_group(int status)
 #endif
 
 #ifdef SYS_wait4
-LINUX_SYSCALL_API pid_t ue_wait4(pid_t pid, int *wstatus, int options, struct ue_rusage *rusage)
+LINUX_SYSCALL_API pid_t ue_wait4(pid_t pid, int *wstatus, int options, struct rusage *rusage)
 {
     return (pid_t)raw_syscall(SYS_wait4, pid, wstatus, options, rusage);
 }
 #endif
 
 #ifdef SYS_waitid
-LINUX_SYSCALL_API int ue_waitid(ue_idtype_t idtype, id_t id, ue_siginfo_t *infop, int options)
+LINUX_SYSCALL_API int ue_waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
     return (int)raw_syscall(SYS_waitid, idtype, id, infop, options);
 }
@@ -1100,7 +1094,7 @@ LINUX_SYSCALL_API pid_t ue_waitpid(pid_t pid, int *wstatus, int options)
 #elif defined(SYS_wait4)
 LINUX_SYSCALL_API pid_t ue_waitpid(pid_t pid, int *wstatus, int options)
 {
-    return (pid_t)raw_syscall(SYS_wait4, pid, wstatus, options, (struct ue_rusage *)0);
+    return (pid_t)raw_syscall(SYS_wait4, pid, wstatus, options, (struct rusage *)0);
 }
 #endif
 
@@ -1215,7 +1209,7 @@ LINUX_SYSCALL_API int ue_pidfd_getfd(int pidfd, int targetfd, unsigned int flags
 #endif
 
 #ifdef SYS_pidfd_send_signal
-LINUX_SYSCALL_API int ue_pidfd_send_signal(int pidfd, int sig, ue_siginfo_t *info, unsigned int flags)
+LINUX_SYSCALL_API int ue_pidfd_send_signal(int pidfd, int sig, siginfo_t *info, unsigned int flags)
 {
     return (int)raw_syscall(SYS_pidfd_send_signal, pidfd, sig, info, flags);
 }
@@ -1229,21 +1223,21 @@ LINUX_SYSCALL_API int ue_kcmp(pid_t pid1, pid_t pid2, int type, unsigned long id
 #endif
 
 #ifdef SYS_process_vm_readv
-LINUX_SYSCALL_API ssize_t ue_process_vm_readv(pid_t pid, const struct ue_iovec *local_iov, unsigned long liovcnt, const struct ue_iovec *remote_iov, unsigned long riovcnt, unsigned long flags)
+LINUX_SYSCALL_API ssize_t ue_process_vm_readv(pid_t pid, const struct iovec *local_iov, unsigned long liovcnt, const struct iovec *remote_iov, unsigned long riovcnt, unsigned long flags)
 {
     return (ssize_t)raw_syscall(SYS_process_vm_readv, pid, local_iov, liovcnt, remote_iov, riovcnt, flags);
 }
 #endif
 
 #ifdef SYS_process_vm_writev
-LINUX_SYSCALL_API ssize_t ue_process_vm_writev(pid_t pid, const struct ue_iovec *local_iov, unsigned long liovcnt, const struct ue_iovec *remote_iov, unsigned long riovcnt, unsigned long flags)
+LINUX_SYSCALL_API ssize_t ue_process_vm_writev(pid_t pid, const struct iovec *local_iov, unsigned long liovcnt, const struct iovec *remote_iov, unsigned long riovcnt, unsigned long flags)
 {
     return (ssize_t)raw_syscall(SYS_process_vm_writev, pid, local_iov, liovcnt, remote_iov, riovcnt, flags);
 }
 #endif
 
 #ifdef SYS_process_madvise
-LINUX_SYSCALL_API ssize_t ue_process_madvise(int pidfd, const struct ue_iovec *iovec, size_t vlen, int advice, unsigned int flags)
+LINUX_SYSCALL_API ssize_t ue_process_madvise(int pidfd, const struct iovec *iovec, size_t vlen, int advice, unsigned int flags)
 {
     return (ssize_t)raw_syscall(SYS_process_madvise, pidfd, iovec, vlen, advice, flags);
 }
@@ -1383,21 +1377,21 @@ LINUX_SYSCALL_API int ue_sched_yield(void)
 #endif
 
 #ifdef SYS_sched_setparam
-LINUX_SYSCALL_API int ue_sched_setparam(pid_t pid, const struct ue_sched_param *param)
+LINUX_SYSCALL_API int ue_sched_setparam(pid_t pid, const struct sched_param *param)
 {
     return (int)raw_syscall(SYS_sched_setparam, pid, param);
 }
 #endif
 
 #ifdef SYS_sched_getparam
-LINUX_SYSCALL_API int ue_sched_getparam(pid_t pid, struct ue_sched_param *param)
+LINUX_SYSCALL_API int ue_sched_getparam(pid_t pid, struct sched_param *param)
 {
     return (int)raw_syscall(SYS_sched_getparam, pid, param);
 }
 #endif
 
 #ifdef SYS_sched_setscheduler
-LINUX_SYSCALL_API int ue_sched_setscheduler(pid_t pid, int policy, const struct ue_sched_param *param)
+LINUX_SYSCALL_API int ue_sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)
 {
     return (int)raw_syscall(SYS_sched_setscheduler, pid, policy, param);
 }
@@ -1425,35 +1419,35 @@ LINUX_SYSCALL_API int ue_sched_get_priority_min(int policy)
 #endif
 
 #ifdef SYS_sched_rr_get_interval
-LINUX_SYSCALL_API int ue_sched_rr_get_interval(pid_t pid, struct ue_timespec *tp)
+LINUX_SYSCALL_API int ue_sched_rr_get_interval(pid_t pid, struct timespec *tp)
 {
     return (int)raw_syscall(SYS_sched_rr_get_interval, pid, tp);
 }
 #endif
 
 #ifdef SYS_sched_setaffinity
-LINUX_SYSCALL_API int ue_sched_setaffinity(pid_t pid, size_t cpusetsize, const ue_cpu_set_t *mask)
+LINUX_SYSCALL_API int ue_sched_setaffinity(pid_t pid, size_t cpusetsize, const cpu_set_t *mask)
 {
     return (int)raw_syscall(SYS_sched_setaffinity, pid, cpusetsize, mask);
 }
 #endif
 
 #ifdef SYS_sched_getaffinity
-LINUX_SYSCALL_API int ue_sched_getaffinity(pid_t pid, size_t cpusetsize, ue_cpu_set_t *mask)
+LINUX_SYSCALL_API int ue_sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask)
 {
     return (int)raw_syscall(SYS_sched_getaffinity, pid, cpusetsize, mask);
 }
 #endif
 
 #ifdef SYS_sched_setattr
-LINUX_SYSCALL_API int ue_sched_setattr(pid_t pid, struct ue_sched_attr *attr, unsigned int flags)
+LINUX_SYSCALL_API int ue_sched_setattr(pid_t pid, struct sched_attr *attr, unsigned int flags)
 {
     return (int)raw_syscall(SYS_sched_setattr, pid, attr, flags);
 }
 #endif
 
 #ifdef SYS_sched_getattr
-LINUX_SYSCALL_API int ue_sched_getattr(pid_t pid, struct ue_sched_attr *attr, unsigned int size, unsigned int flags)
+LINUX_SYSCALL_API int ue_sched_getattr(pid_t pid, struct sched_attr *attr, unsigned int size, unsigned int flags)
 {
     return (int)raw_syscall(SYS_sched_getattr, pid, attr, size, flags);
 }
@@ -1495,42 +1489,42 @@ LINUX_SYSCALL_API int ue_ioprio_get(int which, int who)
 #endif
 
 #ifdef SYS_getrlimit
-LINUX_SYSCALL_API int ue_getrlimit(int resource, struct ue_rlimit *rlim)
+LINUX_SYSCALL_API int ue_getrlimit(int resource, struct rlimit *rlim)
 {
     return (int)raw_syscall(SYS_getrlimit, resource, rlim);
 }
 #endif
 
 #ifdef SYS_setrlimit
-LINUX_SYSCALL_API int ue_setrlimit(int resource, const struct ue_rlimit *rlim)
+LINUX_SYSCALL_API int ue_setrlimit(int resource, const struct rlimit *rlim)
 {
     return (int)raw_syscall(SYS_setrlimit, resource, rlim);
 }
 #endif
 
 #ifdef SYS_prlimit64
-LINUX_SYSCALL_API int ue_prlimit64(pid_t pid, int resource, const struct ue_rlimit64 *new_limit, struct ue_rlimit64 *old_limit)
+LINUX_SYSCALL_API int ue_prlimit64(pid_t pid, int resource, const struct rlimit64 *new_limit, struct rlimit64 *old_limit)
 {
     return (int)raw_syscall(SYS_prlimit64, pid, resource, new_limit, old_limit);
 }
 #endif
 
 #ifdef SYS_getrusage
-LINUX_SYSCALL_API int ue_getrusage(int who, struct ue_rusage *usage)
+LINUX_SYSCALL_API int ue_getrusage(int who, struct rusage *usage)
 {
     return (int)raw_syscall(SYS_getrusage, who, usage);
 }
 #endif
 
 #ifdef SYS_rseq
-LINUX_SYSCALL_API int ue_rseq(struct ue_rseq *rseq, uint32_t rseq_len, int flags, uint32_t sig)
+LINUX_SYSCALL_API int ue_rseq(struct rseq *rseq, uint32_t rseq_len, int flags, uint32_t sig)
 {
     return (int)raw_syscall(SYS_rseq, rseq, rseq_len, flags, sig);
 }
 #endif
 
 #ifdef SYS_rseq_slice_yield
-LINUX_SYSCALL_API int ue_rseq_slice_yield(struct ue_rseq *rseq, unsigned int cpu_id, unsigned int flags)
+LINUX_SYSCALL_API int ue_rseq_slice_yield(struct rseq *rseq, unsigned int cpu_id, unsigned int flags)
 {
     return (int)raw_syscall(SYS_rseq_slice_yield, rseq, cpu_id, flags);
 }
@@ -1558,14 +1552,14 @@ LINUX_SYSCALL_API int ue_tgkill(pid_t tgid, pid_t tid, int sig)
 #endif
 
 #ifdef SYS_rt_sigaction
-LINUX_SYSCALL_API int ue_rt_sigaction(int signum, const struct ue_sigaction *act, struct ue_sigaction *oldact, size_t sigsetsize)
+LINUX_SYSCALL_API int ue_rt_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact, size_t sigsetsize)
 {
     return (int)raw_syscall(SYS_rt_sigaction, signum, act, oldact, sigsetsize);
 }
 #endif
 
 #ifdef SYS_rt_sigprocmask
-LINUX_SYSCALL_API int ue_rt_sigprocmask(int how, const ue_sigset_t *set, ue_sigset_t *oldset, size_t sigsetsize)
+LINUX_SYSCALL_API int ue_rt_sigprocmask(int how, const sigset_t *set, sigset_t *oldset, size_t sigsetsize)
 {
     return (int)raw_syscall(SYS_rt_sigprocmask, how, set, oldset, sigsetsize);
 }
@@ -1579,56 +1573,56 @@ LINUX_SYSCALL_API int ue_rt_sigreturn(unsigned long __unused)
 #endif
 
 #ifdef SYS_rt_sigpending
-LINUX_SYSCALL_API int ue_rt_sigpending(ue_sigset_t *set, size_t sigsetsize)
+LINUX_SYSCALL_API int ue_rt_sigpending(sigset_t *set, size_t sigsetsize)
 {
     return (int)raw_syscall(SYS_rt_sigpending, set, sigsetsize);
 }
 #endif
 
 #ifdef SYS_rt_sigtimedwait
-LINUX_SYSCALL_API int ue_rt_sigtimedwait(const ue_sigset_t *set, ue_siginfo_t *info, const struct ue_timespec *timeout, size_t sigsetsize)
+LINUX_SYSCALL_API int ue_rt_sigtimedwait(const sigset_t *set, siginfo_t *info, const struct timespec *timeout, size_t sigsetsize)
 {
     return (int)raw_syscall(SYS_rt_sigtimedwait, set, info, timeout, sigsetsize);
 }
 #endif
 
 #ifdef SYS_rt_sigqueueinfo
-LINUX_SYSCALL_API int ue_rt_sigqueueinfo(pid_t pid, int sig, ue_siginfo_t *info)
+LINUX_SYSCALL_API int ue_rt_sigqueueinfo(pid_t pid, int sig, siginfo_t *info)
 {
     return (int)raw_syscall(SYS_rt_sigqueueinfo, pid, sig, info);
 }
 #endif
 
 #ifdef SYS_rt_tgsigqueueinfo
-LINUX_SYSCALL_API int ue_rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, ue_siginfo_t *info)
+LINUX_SYSCALL_API int ue_rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t *info)
 {
     return (int)raw_syscall(SYS_rt_tgsigqueueinfo, tgid, tid, sig, info);
 }
 #endif
 
 #ifdef SYS_rt_sigsuspend
-LINUX_SYSCALL_API int ue_rt_sigsuspend(const ue_sigset_t *newset, size_t sigsetsize)
+LINUX_SYSCALL_API int ue_rt_sigsuspend(const sigset_t *newset, size_t sigsetsize)
 {
     return (int)raw_syscall(SYS_rt_sigsuspend, newset, sigsetsize);
 }
 #endif
 
 #ifdef SYS_sigaltstack
-LINUX_SYSCALL_API int ue_sigaltstack(const ue_stack_t *ss, ue_stack_t *old_ss)
+LINUX_SYSCALL_API int ue_sigaltstack(const stack_t *ss, stack_t *old_ss)
 {
     return (int)raw_syscall(SYS_sigaltstack, ss, old_ss);
 }
 #endif
 
 #ifdef SYS_signalfd
-LINUX_SYSCALL_API int ue_signalfd(int fd, const ue_sigset_t *mask, int flags)
+LINUX_SYSCALL_API int ue_signalfd(int fd, const sigset_t *mask, int flags)
 {
     return (int)raw_syscall(SYS_signalfd, fd, mask, flags);
 }
 #endif
 
 #ifdef SYS_signalfd4
-LINUX_SYSCALL_API int ue_signalfd4(int fd, const ue_sigset_t *mask, size_t sizemask, int flags)
+LINUX_SYSCALL_API int ue_signalfd4(int fd, const sigset_t *mask, size_t sizemask, int flags)
 {
     return (int)raw_syscall(SYS_signalfd4, fd, mask, sizemask, flags);
 }
@@ -1656,14 +1650,14 @@ LINUX_SYSCALL_API int ue_restart_syscall(void)
 #endif
 
 #ifdef SYS_gettimeofday
-LINUX_SYSCALL_API int ue_gettimeofday(struct ue_timeval *tv, struct ue_timezone *tz)
+LINUX_SYSCALL_API int ue_gettimeofday(struct timeval *tv, struct timezone *tz)
 {
     return (int)raw_syscall(SYS_gettimeofday, tv, tz);
 }
 #endif
 
 #ifdef SYS_settimeofday
-LINUX_SYSCALL_API int ue_settimeofday(const struct ue_timeval *tv, const struct ue_timezone *tz)
+LINUX_SYSCALL_API int ue_settimeofday(const struct timeval *tv, const struct timezone *tz)
 {
     return (int)raw_syscall(SYS_settimeofday, tv, tz);
 }
@@ -1677,105 +1671,105 @@ LINUX_SYSCALL_API time_t ue_time(time_t *tloc)
 #endif
 
 #ifdef SYS_times
-LINUX_SYSCALL_API clock_t ue_times(struct ue_tms *buf)
+LINUX_SYSCALL_API clock_t ue_times(struct tms *buf)
 {
     return (clock_t)raw_syscall(SYS_times, buf);
 }
 #endif
 
 #ifdef SYS_nanosleep
-LINUX_SYSCALL_API int ue_nanosleep(const struct ue_timespec *req, struct ue_timespec *rem)
+LINUX_SYSCALL_API int ue_nanosleep(const struct timespec *req, struct timespec *rem)
 {
     return (int)raw_syscall(SYS_nanosleep, req, rem);
 }
 #endif
 
 #ifdef SYS_clock_nanosleep
-LINUX_SYSCALL_API int ue_clock_nanosleep(clockid_t clockid, int flags, const struct ue_timespec *request, struct ue_timespec *remain)
+LINUX_SYSCALL_API int ue_clock_nanosleep(clockid_t clockid, int flags, const struct timespec *request, struct timespec *remain)
 {
     return (int)raw_syscall(SYS_clock_nanosleep, clockid, flags, request, remain);
 }
 #endif
 
 #ifdef SYS_clock_settime
-LINUX_SYSCALL_API int ue_clock_settime(clockid_t clockid, const struct ue_timespec *tp)
+LINUX_SYSCALL_API int ue_clock_settime(clockid_t clockid, const struct timespec *tp)
 {
     return (int)raw_syscall(SYS_clock_settime, clockid, tp);
 }
 #endif
 
 #ifdef SYS_clock_gettime
-LINUX_SYSCALL_API int ue_clock_gettime(clockid_t clockid, struct ue_timespec *tp)
+LINUX_SYSCALL_API int ue_clock_gettime(clockid_t clockid, struct timespec *tp)
 {
     return (int)raw_syscall(SYS_clock_gettime, clockid, tp);
 }
 #endif
 
 #ifdef SYS_clock_getres
-LINUX_SYSCALL_API int ue_clock_getres(clockid_t clockid, struct ue_timespec *res)
+LINUX_SYSCALL_API int ue_clock_getres(clockid_t clockid, struct timespec *res)
 {
     return (int)raw_syscall(SYS_clock_getres, clockid, res);
 }
 #endif
 
 #ifdef SYS_clock_adjtime
-LINUX_SYSCALL_API int ue_clock_adjtime(clockid_t clk_id, struct ue_timex *buf)
+LINUX_SYSCALL_API int ue_clock_adjtime(clockid_t clk_id, struct timex *buf)
 {
     return (int)raw_syscall(SYS_clock_adjtime, clk_id, buf);
 }
 #endif
 
 #ifdef SYS_adjtimex
-LINUX_SYSCALL_API int ue_adjtimex(struct ue_timex *buf)
+LINUX_SYSCALL_API int ue_adjtimex(struct timex *buf)
 {
     return (int)raw_syscall(SYS_adjtimex, buf);
 }
 #endif
 
 #ifdef SYS_timer_create
-LINUX_SYSCALL_API int ue_timer_create(clockid_t clockid, struct ue_sigevent *sevp, ue_timer_t *timerid)
+LINUX_SYSCALL_API int ue_timer_create(clockid_t clockid, struct sigevent *sevp, timer_t *timerid)
 {
     return (int)raw_syscall(SYS_timer_create, clockid, sevp, timerid);
 }
 #endif
 
 #ifdef SYS_timer_settime
-LINUX_SYSCALL_API int ue_timer_settime(ue_timer_t timerid, int flags, const struct ue_itimerspec *new_value, struct ue_itimerspec *old_value)
+LINUX_SYSCALL_API int ue_timer_settime(timer_t timerid, int flags, const struct itimerspec *new_value, struct itimerspec *old_value)
 {
     return (int)raw_syscall(SYS_timer_settime, timerid, flags, new_value, old_value);
 }
 #endif
 
 #ifdef SYS_timer_gettime
-LINUX_SYSCALL_API int ue_timer_gettime(ue_timer_t timerid, struct ue_itimerspec *curr_value)
+LINUX_SYSCALL_API int ue_timer_gettime(timer_t timerid, struct itimerspec *curr_value)
 {
     return (int)raw_syscall(SYS_timer_gettime, timerid, curr_value);
 }
 #endif
 
 #ifdef SYS_timer_getoverrun
-LINUX_SYSCALL_API int ue_timer_getoverrun(ue_timer_t timerid)
+LINUX_SYSCALL_API int ue_timer_getoverrun(timer_t timerid)
 {
     return (int)raw_syscall(SYS_timer_getoverrun, timerid);
 }
 #endif
 
 #ifdef SYS_timer_delete
-LINUX_SYSCALL_API int ue_timer_delete(ue_timer_t timerid)
+LINUX_SYSCALL_API int ue_timer_delete(timer_t timerid)
 {
     return (int)raw_syscall(SYS_timer_delete, timerid);
 }
 #endif
 
 #ifdef SYS_getitimer
-LINUX_SYSCALL_API int ue_getitimer(int which, struct ue_itimerval *curr_value)
+LINUX_SYSCALL_API int ue_getitimer(int which, struct itimerval *curr_value)
 {
     return (int)raw_syscall(SYS_getitimer, which, curr_value);
 }
 #endif
 
 #ifdef SYS_setitimer
-LINUX_SYSCALL_API int ue_setitimer(int which, const struct ue_itimerval *new_value, struct ue_itimerval *old_value)
+LINUX_SYSCALL_API int ue_setitimer(int which, const struct itimerval *new_value, struct itimerval *old_value)
 {
     return (int)raw_syscall(SYS_setitimer, which, new_value, old_value);
 }
@@ -1789,56 +1783,56 @@ LINUX_SYSCALL_API int ue_timerfd_create(int clockid, int flags)
 #endif
 
 #ifdef SYS_timerfd_settime
-LINUX_SYSCALL_API int ue_timerfd_settime(int fd, int flags, const struct ue_itimerspec *new_value, struct ue_itimerspec *old_value)
+LINUX_SYSCALL_API int ue_timerfd_settime(int fd, int flags, const struct itimerspec *new_value, struct itimerspec *old_value)
 {
     return (int)raw_syscall(SYS_timerfd_settime, fd, flags, new_value, old_value);
 }
 #endif
 
 #ifdef SYS_timerfd_gettime
-LINUX_SYSCALL_API int ue_timerfd_gettime(int fd, struct ue_itimerspec *curr_value)
+LINUX_SYSCALL_API int ue_timerfd_gettime(int fd, struct itimerspec *curr_value)
 {
     return (int)raw_syscall(SYS_timerfd_gettime, fd, curr_value);
 }
 #endif
 
 #ifdef SYS_utime
-LINUX_SYSCALL_API int ue_utime(const char *filename, const struct ue_utimbuf *times)
+LINUX_SYSCALL_API int ue_utime(const char *filename, const struct utimbuf *times)
 {
     return (int)raw_syscall(SYS_utime, filename, times);
 }
 #endif
 
 #ifdef SYS_utimes
-LINUX_SYSCALL_API int ue_utimes(const char *filename, const struct ue_timeval times[2])
+LINUX_SYSCALL_API int ue_utimes(const char *filename, const struct timeval times[2])
 {
     return (int)raw_syscall(SYS_utimes, filename, times);
 }
 #endif
 
 #ifdef SYS_poll
-LINUX_SYSCALL_API int ue_poll(struct ue_pollfd *fds, nfds_t nfds, int timeout)
+LINUX_SYSCALL_API int ue_poll(struct pollfd *fds, nfds_t nfds, int timeout)
 {
     return (int)raw_syscall(SYS_poll, fds, nfds, timeout);
 }
 #endif
 
 #ifdef SYS_ppoll
-LINUX_SYSCALL_API int ue_ppoll(struct ue_pollfd *fds, nfds_t nfds, const struct ue_timespec *tmo_p, const ue_sigset_t *sigmask)
+LINUX_SYSCALL_API int ue_ppoll(struct pollfd *fds, nfds_t nfds, const struct timespec *tmo_p, const sigset_t *sigmask)
 {
     return (int)raw_syscall(SYS_ppoll, fds, nfds, tmo_p, sigmask);
 }
 #endif
 
 #ifdef SYS_select
-LINUX_SYSCALL_API int ue_select(int nfds, ue_fd_set *readfds, ue_fd_set *writefds, ue_fd_set *exceptfds, struct ue_timeval *timeout)
+LINUX_SYSCALL_API int ue_select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
 {
     return (int)raw_syscall(SYS_select, nfds, readfds, writefds, exceptfds, timeout);
 }
 #endif
 
 #ifdef SYS_pselect
-LINUX_SYSCALL_API int ue_pselect(int nfds, ue_fd_set *readfds, ue_fd_set *writefds, ue_fd_set *exceptfds, const struct ue_timespec *timeout, const ue_sigset_t *sigmask)
+LINUX_SYSCALL_API int ue_pselect(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const struct timespec *timeout, const sigset_t *sigmask)
 {
     return (int)raw_syscall(SYS_pselect, nfds, readfds, writefds, exceptfds, timeout, sigmask);
 }
@@ -1859,28 +1853,28 @@ LINUX_SYSCALL_API int ue_epoll_create1(int flags)
 #endif
 
 #ifdef SYS_epoll_ctl
-LINUX_SYSCALL_API int ue_epoll_ctl(int epfd, int op, int fd, struct ue_epoll_event *event)
+LINUX_SYSCALL_API int ue_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)
 {
     return (int)raw_syscall(SYS_epoll_ctl, epfd, op, fd, event);
 }
 #endif
 
 #ifdef SYS_epoll_wait
-LINUX_SYSCALL_API int ue_epoll_wait(int epfd, struct ue_epoll_event *events, int maxevents, int timeout)
+LINUX_SYSCALL_API int ue_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)
 {
     return (int)raw_syscall(SYS_epoll_wait, epfd, events, maxevents, timeout);
 }
 #endif
 
 #ifdef SYS_epoll_pwait
-LINUX_SYSCALL_API int ue_epoll_pwait(int epfd, struct ue_epoll_event *events, int maxevents, int timeout, const ue_sigset_t *sigmask)
+LINUX_SYSCALL_API int ue_epoll_pwait(int epfd, struct epoll_event *events, int maxevents, int timeout, const sigset_t *sigmask)
 {
     return (int)raw_syscall(SYS_epoll_pwait, epfd, events, maxevents, timeout, sigmask);
 }
 #endif
 
 #ifdef SYS_epoll_pwait2
-LINUX_SYSCALL_API int ue_epoll_pwait2(int epfd, struct ue_epoll_event *events, int maxevents, const struct ue_timespec *timeout, const ue_sigset_t *sigmask)
+LINUX_SYSCALL_API int ue_epoll_pwait2(int epfd, struct epoll_event *events, int maxevents, const struct timespec *timeout, const sigset_t *sigmask)
 {
     return (int)raw_syscall(SYS_epoll_pwait2, epfd, events, maxevents, timeout, sigmask);
 }
@@ -1915,7 +1909,7 @@ LINUX_SYSCALL_API int ue_socketpair(int domain, int type, int protocol, int sv[2
 #endif
 
 #ifdef SYS_bind
-LINUX_SYSCALL_API int ue_bind(int sockfd, const struct ue_sockaddr *addr, socklen_t addrlen)
+LINUX_SYSCALL_API int ue_bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
     return (int)raw_syscall(SYS_bind, sockfd, addr, addrlen);
 }
@@ -1929,21 +1923,21 @@ LINUX_SYSCALL_API int ue_listen(int sockfd, int backlog)
 #endif
 
 #ifdef SYS_accept
-LINUX_SYSCALL_API int ue_accept(int sockfd, struct ue_sockaddr *addr, socklen_t *addrlen)
+LINUX_SYSCALL_API int ue_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
     return (int)raw_syscall(SYS_accept, sockfd, addr, addrlen);
 }
 #endif
 
 #ifdef SYS_accept4
-LINUX_SYSCALL_API int ue_accept4(int sockfd, struct ue_sockaddr *addr, socklen_t *addrlen, int flags)
+LINUX_SYSCALL_API int ue_accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen, int flags)
 {
     return (int)raw_syscall(SYS_accept4, sockfd, addr, addrlen, flags);
 }
 #endif
 
 #ifdef SYS_connect
-LINUX_SYSCALL_API int ue_connect(int sockfd, const struct ue_sockaddr *addr, socklen_t addrlen)
+LINUX_SYSCALL_API int ue_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
     return (int)raw_syscall(SYS_connect, sockfd, addr, addrlen);
 }
@@ -1957,14 +1951,14 @@ LINUX_SYSCALL_API int ue_shutdown(int sockfd, int how)
 #endif
 
 #ifdef SYS_getsockname
-LINUX_SYSCALL_API int ue_getsockname(int sockfd, struct ue_sockaddr *addr, socklen_t *addrlen)
+LINUX_SYSCALL_API int ue_getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
     return (int)raw_syscall(SYS_getsockname, sockfd, addr, addrlen);
 }
 #endif
 
 #ifdef SYS_getpeername
-LINUX_SYSCALL_API int ue_getpeername(int sockfd, struct ue_sockaddr *addr, socklen_t *addrlen)
+LINUX_SYSCALL_API int ue_getpeername(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
     return (int)raw_syscall(SYS_getpeername, sockfd, addr, addrlen);
 }
@@ -1985,42 +1979,42 @@ LINUX_SYSCALL_API int ue_getsockopt(int sockfd, int level, int optname, void *op
 #endif
 
 #ifdef SYS_sendto
-LINUX_SYSCALL_API ssize_t ue_sendto(int sockfd, const void *buf, size_t len, int flags, const struct ue_sockaddr *dest_addr, socklen_t addrlen)
+LINUX_SYSCALL_API ssize_t ue_sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen)
 {
     return (ssize_t)raw_syscall(SYS_sendto, sockfd, buf, len, flags, dest_addr, addrlen);
 }
 #endif
 
 #ifdef SYS_recvfrom
-LINUX_SYSCALL_API ssize_t ue_recvfrom(int sockfd, void *buf, size_t len, int flags, struct ue_sockaddr *src_addr, socklen_t *addrlen)
+LINUX_SYSCALL_API ssize_t ue_recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen)
 {
     return (ssize_t)raw_syscall(SYS_recvfrom, sockfd, buf, len, flags, src_addr, addrlen);
 }
 #endif
 
 #ifdef SYS_sendmsg
-LINUX_SYSCALL_API ssize_t ue_sendmsg(int sockfd, const struct ue_msghdr *msg, int flags)
+LINUX_SYSCALL_API ssize_t ue_sendmsg(int sockfd, const struct msghdr *msg, int flags)
 {
     return (ssize_t)raw_syscall(SYS_sendmsg, sockfd, msg, flags);
 }
 #endif
 
 #ifdef SYS_recvmsg
-LINUX_SYSCALL_API ssize_t ue_recvmsg(int sockfd, struct ue_msghdr *msg, int flags)
+LINUX_SYSCALL_API ssize_t ue_recvmsg(int sockfd, struct msghdr *msg, int flags)
 {
     return (ssize_t)raw_syscall(SYS_recvmsg, sockfd, msg, flags);
 }
 #endif
 
 #ifdef SYS_sendmmsg
-LINUX_SYSCALL_API int ue_sendmmsg(int sockfd, struct ue_mmsghdr *msgvec, unsigned int vlen, int flags)
+LINUX_SYSCALL_API int ue_sendmmsg(int sockfd, struct mmsghdr *msgvec, unsigned int vlen, int flags)
 {
     return (int)raw_syscall(SYS_sendmmsg, sockfd, msgvec, vlen, flags);
 }
 #endif
 
 #ifdef SYS_recvmmsg
-LINUX_SYSCALL_API int ue_recvmmsg(int sockfd, struct ue_mmsghdr *msgvec, unsigned int vlen, int flags, struct ue_timespec *timeout)
+LINUX_SYSCALL_API int ue_recvmmsg(int sockfd, struct mmsghdr *msgvec, unsigned int vlen, int flags, struct timespec *timeout)
 {
     return (int)raw_syscall(SYS_recvmmsg, sockfd, msgvec, vlen, flags, timeout);
 }
@@ -2034,14 +2028,14 @@ LINUX_SYSCALL_API int ue_socketcall(int call, unsigned long *args)
 #endif
 
 #ifdef SYS_futex
-LINUX_SYSCALL_API int ue_futex(int *uaddr, int futex_op, int val, const struct ue_timespec *timeout, int *uaddr2, int val3)
+LINUX_SYSCALL_API int ue_futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3)
 {
     return (int)raw_syscall(SYS_futex, uaddr, futex_op, val, timeout, uaddr2, val3);
 }
 #endif
 
 #ifdef SYS_futex_waitv
-LINUX_SYSCALL_API int ue_futex_waitv(struct ue_futex_waitv *waiters, unsigned int nr_futexes, unsigned int flags, struct ue_timespec *timeout, clockid_t clockid)
+LINUX_SYSCALL_API int ue_futex_waitv(struct futex_waitv *waiters, unsigned int nr_futexes, unsigned int flags, struct timespec *timeout, clockid_t clockid)
 {
     return (int)raw_syscall(SYS_futex_waitv, waiters, nr_futexes, flags, timeout, clockid);
 }
@@ -2055,7 +2049,7 @@ LINUX_SYSCALL_API int ue_futex_wake(unsigned int *uaddr, unsigned int nr_wake, u
 #endif
 
 #ifdef SYS_futex_wait
-LINUX_SYSCALL_API int ue_futex_wait(unsigned int *uaddr, unsigned int val, unsigned int mask, unsigned int flags, struct ue_kernel_timespec *timeout, clockid_t clockid)
+LINUX_SYSCALL_API int ue_futex_wait(unsigned int *uaddr, unsigned int val, unsigned int mask, unsigned int flags, struct kernel_timespec *timeout, clockid_t clockid)
 {
     return (int)raw_syscall(SYS_futex_wait, uaddr, val, mask, flags, timeout, clockid);
 }
@@ -2069,14 +2063,14 @@ LINUX_SYSCALL_API int ue_futex_requeue(unsigned int *uaddr, unsigned int nr_wake
 #endif
 
 #ifdef SYS_set_robust_list
-LINUX_SYSCALL_API int ue_set_robust_list(struct ue_robust_list_head *head, size_t len)
+LINUX_SYSCALL_API int ue_set_robust_list(struct robust_list_head *head, size_t len)
 {
     return (int)raw_syscall(SYS_set_robust_list, head, len);
 }
 #endif
 
 #ifdef SYS_get_robust_list
-LINUX_SYSCALL_API int ue_get_robust_list(int pid, struct ue_robust_list_head **head_ptr, size_t *len_ptr)
+LINUX_SYSCALL_API int ue_get_robust_list(int pid, struct robust_list_head **head_ptr, size_t *len_ptr)
 {
     return (int)raw_syscall(SYS_get_robust_list, pid, head_ptr, len_ptr);
 }
@@ -2098,7 +2092,7 @@ LINUX_SYSCALL_API void *ue_shmat(int shmid, const void *shmaddr, int shmflg)
 
 
 #ifdef SYS_shmctl
-LINUX_SYSCALL_API int ue_shmctl(int shmid, int cmd, struct ue_shmid_ds *buf)
+LINUX_SYSCALL_API int ue_shmctl(int shmid, int cmd, struct shmid_ds *buf)
 {
     return (int)raw_syscall(SYS_shmctl, shmid, cmd, buf);
 }
@@ -2133,7 +2127,7 @@ LINUX_SYSCALL_API ssize_t ue_msgrcv(int msqid, void *msgp, size_t msgsz, long ms
 #endif
 
 #ifdef SYS_msgctl
-LINUX_SYSCALL_API int ue_msgctl(int msqid, int cmd, struct ue_msqid_ds *buf)
+LINUX_SYSCALL_API int ue_msgctl(int msqid, int cmd, struct msqid_ds *buf)
 {
     return (int)raw_syscall(SYS_msgctl, msqid, cmd, buf);
 }
@@ -2147,7 +2141,7 @@ LINUX_SYSCALL_API int ue_semget(key_t key, int nsems, int semflg)
 #endif
 
 #ifdef SYS_semop
-LINUX_SYSCALL_API int ue_semop(int semid, struct ue_sembuf *sops, size_t nsops)
+LINUX_SYSCALL_API int ue_semop(int semid, struct sembuf *sops, size_t nsops)
 {
     return (int)raw_syscall(SYS_semop, semid, sops, nsops);
 }
@@ -2161,7 +2155,7 @@ LINUX_SYSCALL_API int ue_semctl(int semid, int semnum, int cmd, unsigned long ar
 #endif
 
 #ifdef SYS_semtimedop
-LINUX_SYSCALL_API int ue_semtimedop(int semid, struct ue_sembuf *sops, size_t nsops, const struct ue_timespec *timeout)
+LINUX_SYSCALL_API int ue_semtimedop(int semid, struct sembuf *sops, size_t nsops, const struct timespec *timeout)
 {
     return (int)raw_syscall(SYS_semtimedop, semid, sops, nsops, timeout);
 }
@@ -2175,7 +2169,7 @@ LINUX_SYSCALL_API int ue_ipc(unsigned int call, int first, unsigned long second,
 #endif
 
 #ifdef SYS_mq_open
-LINUX_SYSCALL_API mqd_t ue_mq_open(const char *name, int oflag, mode_t mode, struct ue_mq_attr *attr)
+LINUX_SYSCALL_API mqd_t ue_mq_open(const char *name, int oflag, mode_t mode, struct mq_attr *attr)
 {
     return (mqd_t)raw_syscall(SYS_mq_open, name, oflag, mode, attr);
 }
@@ -2189,28 +2183,28 @@ LINUX_SYSCALL_API int ue_mq_unlink(const char *name)
 #endif
 
 #ifdef SYS_mq_timedsend
-LINUX_SYSCALL_API int ue_mq_timedsend(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio, const struct ue_timespec *abs_timeout)
+LINUX_SYSCALL_API int ue_mq_timedsend(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio, const struct timespec *abs_timeout)
 {
     return (int)raw_syscall(SYS_mq_timedsend, mqdes, msg_ptr, msg_len, msg_prio, abs_timeout);
 }
 #endif
 
 #ifdef SYS_mq_timedreceive
-LINUX_SYSCALL_API ssize_t ue_mq_timedreceive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio, const struct ue_timespec *abs_timeout)
+LINUX_SYSCALL_API ssize_t ue_mq_timedreceive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio, const struct timespec *abs_timeout)
 {
     return (ssize_t)raw_syscall(SYS_mq_timedreceive, mqdes, msg_ptr, msg_len, msg_prio, abs_timeout);
 }
 #endif
 
 #ifdef SYS_mq_notify
-LINUX_SYSCALL_API int ue_mq_notify(mqd_t mqdes, const struct ue_sigevent *sevp)
+LINUX_SYSCALL_API int ue_mq_notify(mqd_t mqdes, const struct sigevent *sevp)
 {
     return (int)raw_syscall(SYS_mq_notify, mqdes, sevp);
 }
 #endif
 
 #ifdef SYS_mq_getsetattr
-LINUX_SYSCALL_API int ue_mq_getsetattr(mqd_t mqdes, const struct ue_mq_attr *newattr, struct ue_mq_attr *oldattr)
+LINUX_SYSCALL_API int ue_mq_getsetattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr)
 {
     return (int)raw_syscall(SYS_mq_getsetattr, mqdes, newattr, oldattr);
 }
@@ -2231,47 +2225,47 @@ LINUX_SYSCALL_API int ue_io_destroy(aio_context_t ctx_id)
 #endif
 
 #ifdef SYS_io_submit
-LINUX_SYSCALL_API int ue_io_submit(aio_context_t ctx_id, long nr, struct ue_iocb **iocbpp)
+LINUX_SYSCALL_API int ue_io_submit(aio_context_t ctx_id, long nr, struct iocb **iocbpp)
 {
     return (int)raw_syscall(SYS_io_submit, ctx_id, nr, iocbpp);
 }
 #endif
 
 #ifdef SYS_io_cancel
-LINUX_SYSCALL_API int ue_io_cancel(aio_context_t ctx_id, struct ue_iocb *iocb, struct ue_io_event *result)
+LINUX_SYSCALL_API int ue_io_cancel(aio_context_t ctx_id, struct iocb *iocb, struct io_event *result)
 {
     return (int)raw_syscall(SYS_io_cancel, ctx_id, iocb, result);
 }
 #endif
 
 #ifdef SYS_io_getevents
-LINUX_SYSCALL_API int ue_io_getevents(aio_context_t ctx_id, long min_nr, long nr, struct ue_io_event *events, struct ue_timespec *timeout)
+LINUX_SYSCALL_API int ue_io_getevents(aio_context_t ctx_id, long min_nr, long nr, struct io_event *events, struct timespec *timeout)
 {
     return (int)raw_syscall(SYS_io_getevents, ctx_id, min_nr, nr, events, timeout);
 }
 #endif
 
 #ifdef SYS_io_pgetevents
-LINUX_SYSCALL_API int ue_io_pgetevents(aio_context_t ctx_id, long min_nr, long nr, struct ue_io_event *events, struct ue_timespec *timeout, const ue_sigset_t *sigmask)
+LINUX_SYSCALL_API int ue_io_pgetevents(aio_context_t ctx_id, long min_nr, long nr, struct io_event *events, struct timespec *timeout, const sigset_t *sigmask)
 {
     return (int)raw_syscall(SYS_io_pgetevents, ctx_id, min_nr, nr, events, timeout, sigmask);
 }
 #endif
 
 #ifdef SYS_io_uring_setup
-LINUX_SYSCALL_API int ue_io_uring_setup(unsigned int entries, struct ue_io_uring_params *p)
+LINUX_SYSCALL_API int ue_io_uring_setup(unsigned int entries, struct io_uring_params *p)
 {
     return (int)raw_syscall(SYS_io_uring_setup, entries, p);
 }
 #endif
 
 #ifdef SYS_io_uring_enter
-LINUX_SYSCALL_API int ue_io_uring_enter(unsigned int fd, unsigned int to_submit, unsigned int min_complete, unsigned int flags, ue_sigset_t *sig)
+LINUX_SYSCALL_API int ue_io_uring_enter(unsigned int fd, unsigned int to_submit, unsigned int min_complete, unsigned int flags, sigset_t *sig)
 {
     /* The kernel ABI has a sixth argsz argument; linux.h intentionally
        keeps the public wrapper compatible with the five-argument form. */
     return (int)raw_syscall(SYS_io_uring_enter, fd, to_submit, min_complete, flags, sig,
-                            sig ? sizeof(ue_sigset_t) : 0);
+                            sig ? sizeof(sigset_t) : 0);
 }
 #endif
 
@@ -2325,14 +2319,14 @@ LINUX_SYSCALL_API int ue_fanotify_mark(int fanotify_fd, unsigned int flags, uint
 #endif
 
 #ifdef SYS_uname
-LINUX_SYSCALL_API int ue_uname(struct ue_utsname *buf)
+LINUX_SYSCALL_API int ue_uname(struct utsname *buf)
 {
     return (int)raw_syscall(SYS_uname, buf);
 }
 #endif
 
 #ifdef SYS_sysinfo
-LINUX_SYSCALL_API int ue_sysinfo(struct ue_sysinfo *info)
+LINUX_SYSCALL_API int ue_sysinfo(struct sysinfo *info)
 {
     return (int)raw_syscall(SYS_sysinfo, info);
 }
@@ -2423,7 +2417,7 @@ LINUX_SYSCALL_API int ue_delete_module(const char *name, int flags)
 #endif
 
 #ifdef SYS_bpf
-LINUX_SYSCALL_API int ue_bpf(int cmd, union ue_bpf_attr *attr, unsigned int size)
+LINUX_SYSCALL_API int ue_bpf(int cmd, union bpf_attr *attr, unsigned int size)
 {
     return (int)raw_syscall(SYS_bpf, cmd, attr, size);
 }
@@ -2500,42 +2494,42 @@ LINUX_SYSCALL_API long ue_ptrace(int request, pid_t pid, void *addr, void *data)
 #endif
 
 #ifdef SYS_perf_event_open
-LINUX_SYSCALL_API int ue_perf_event_open(struct ue_perf_event_attr *attr, pid_t pid, int cpu, int group_fd, unsigned long flags)
+LINUX_SYSCALL_API int ue_perf_event_open(struct perf_event_attr *attr, pid_t pid, int cpu, int group_fd, unsigned long flags)
 {
     return (int)raw_syscall(SYS_perf_event_open, attr, pid, cpu, group_fd, flags);
 }
 #endif
 
 #ifdef SYS_getcpu
-LINUX_SYSCALL_API int ue_getcpu(unsigned int *cpu, unsigned int *node, struct ue_getcpu_cache *tcache)
+LINUX_SYSCALL_API int ue_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *tcache)
 {
     return (int)raw_syscall(SYS_getcpu, cpu, node, tcache);
 }
 #endif
 
 #ifdef SYS_cachestat
-LINUX_SYSCALL_API int ue_cachestat(unsigned int fd, struct ue_cachestat_range *crange, struct ue_cachestat *cstat, unsigned int flags)
+LINUX_SYSCALL_API int ue_cachestat(unsigned int fd, struct cachestat_range *crange, struct cachestat *cstat, unsigned int flags)
 {
     return (int)raw_syscall(SYS_cachestat, fd, crange, cstat, flags);
 }
 #endif
 
 #ifdef SYS_file_getattr
-LINUX_SYSCALL_API int ue_file_getattr(int fd, unsigned int mask, struct ue_file_handle *handle, size_t *handle_bytes)
+LINUX_SYSCALL_API int ue_file_getattr(int fd, unsigned int mask, struct file_handle *handle, size_t *handle_bytes)
 {
     return (int)raw_syscall(SYS_file_getattr, fd, mask, handle, handle_bytes);
 }
 #endif
 
 #ifdef SYS_file_setattr
-LINUX_SYSCALL_API int ue_file_setattr(int fd, unsigned int mask, struct ue_file_handle *handle, size_t handle_bytes)
+LINUX_SYSCALL_API int ue_file_setattr(int fd, unsigned int mask, struct file_handle *handle, size_t handle_bytes)
 {
     return (int)raw_syscall(SYS_file_setattr, fd, mask, handle, handle_bytes);
 }
 #endif
 
 #ifdef SYS_listns
-LINUX_SYSCALL_API int ue_listns(int nstype, struct ue_namespace_entry *entries, unsigned int max_entries, unsigned int flags)
+LINUX_SYSCALL_API int ue_listns(int nstype, struct namespace_entry *entries, unsigned int max_entries, unsigned int flags)
 {
     return (int)raw_syscall(SYS_listns, nstype, entries, max_entries, flags);
 }
